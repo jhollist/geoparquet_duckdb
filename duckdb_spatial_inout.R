@@ -29,7 +29,6 @@ xy_sf_buff <- function() {
   st_transform(xy_sf, crs = 5072) |> 
   st_buffer(100) |>
   st_transform(4326)}
-#tic(); xy_sf_buff(); toc()
 
 xy_duck_buff <- function(){
 # Create connection with duckdb
@@ -53,11 +52,8 @@ dbExecute(con,
           FROM geo_pts;"
           )
 # Query Spatial into sf
-dbGetQuery(con,
-                "SELECT * FROM geo_buff;") |> 
+dbGetQuery(con, "SELECT * FROM geo_buff;") |> 
   st_as_sf(crs = 4326)
 dbDisconnect(con)}
-
-#tic();xy_duck_buff();toc()
 
 microbenchmark::microbenchmark(xy_sf_buff(), xy_duck_buff(), times = 5)
